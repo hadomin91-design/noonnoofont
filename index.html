@@ -1,1 +1,1297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>눈누 — 무료 한글 폰트 모음</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- 고딕: Noto Sans KR (헤더/푸터/UI), 손글씨: Gaegu (본문 포인트), Nanum Pen Script (캘리 강조) -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Gaegu:wght@300;400;700&family=Nanum+Pen+Script&family=Nanum+Gothic:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS 변수 ===== */
+:root {
+  --font-gothic: 'Noto Sans KR', 'Nanum Gothic', sans-serif;
+  --font-handwriting: 'Gaegu', 'Nanum Pen Script', cursive;
+  --yellow: #f5c800;
+  --yellow-light: #fff8d6;
+  --yellow-dark: #c8a000;
+  --orange: #ff6b35;
+  --dark: #1a1a1a;
+  --gray: #666;
+  --light-gray: #f7f7f7;
+  --border: #f0f0f0;
+  --white: #ffffff;
+}
 
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-gothic);
+  background: var(--white);
+  color: var(--dark);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ===== 커서 ===== */
+#cursor-dot {
+  width: 9px; height: 9px;
+  background: var(--yellow);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: background 0.2s, transform 0.15s;
+  box-shadow: 0 0 8px rgba(245,200,0,0.6);
+}
+#cursor-ring {
+  width: 34px; height: 34px;
+  border: 2px solid var(--yellow);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.2s, transform 0.12s, background 0.2s;
+  background: rgba(245,200,0,0.05);
+}
+
+/* ===== 스크롤 진행 바 ===== */
+#scroll-progress {
+  position: fixed; top: 0; left: 0;
+  height: 3px; width: 0%;
+  background: linear-gradient(90deg, var(--yellow), var(--orange), var(--yellow));
+  z-index: 9999;
+  transition: width 0.08s linear;
+  border-radius: 0 2px 2px 0;
+}
+
+/* ===== 헤더 (고딕 전용) ===== */
+header {
+  position: sticky; top: 3px; z-index: 1000;
+  background: var(--white);
+  border-bottom: 1.5px solid var(--border);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  font-family: var(--font-gothic);
+}
+.header-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 28px;
+  height: 62px;
+  display: flex; align-items: center; gap: 0;
+}
+.logo-area {
+  display: flex; align-items: center; gap: 6px;
+  text-decoration: none; color: var(--dark);
+  font-weight: 900; font-size: 19px;
+  letter-spacing: -0.5px;
+  margin-right: 28px; flex-shrink: 0;
+  font-family: var(--font-gothic);
+}
+nav.main-nav {
+  display: flex; align-items: center; gap: 2px;
+  flex: 1; font-family: var(--font-gothic);
+}
+nav.main-nav a {
+  text-decoration: none; color: #555;
+  font-size: 14px; font-weight: 500;
+  padding: 6px 14px; border-radius: 20px;
+  transition: all 0.2s; white-space: nowrap;
+  font-family: var(--font-gothic);
+}
+nav.main-nav a:hover { background: var(--yellow-light); color: var(--yellow-dark); }
+nav.main-nav a.active { background: var(--yellow); color: var(--dark); font-weight: 700; }
+nav.main-nav a.market-link { background: var(--dark); color: var(--yellow); font-weight: 700; }
+nav.main-nav a.market-link:hover { background: #333; }
+
+.header-search {
+  display: flex; align-items: center;
+  background: var(--light-gray); border: 1.5px solid #eee;
+  border-radius: 24px; padding: 7px 16px;
+  gap: 8px; margin: 0 16px;
+  transition: border-color 0.2s;
+  min-width: 220px; font-family: var(--font-gothic);
+}
+.header-search:focus-within { border-color: var(--yellow); background: var(--white); }
+.header-search input {
+  border: none; background: transparent;
+  font-size: 13px; color: #333; outline: none; width: 100%;
+  font-family: var(--font-gothic);
+}
+.header-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  font-family: var(--font-gothic);
+}
+.header-right a {
+  text-decoration: none; font-size: 13px;
+  padding: 7px 16px; border-radius: 20px;
+  font-weight: 500; transition: all 0.2s;
+  font-family: var(--font-gothic);
+}
+.btn-login { color: #555; border: 1.5px solid #ddd; }
+.btn-login:hover { border-color: var(--yellow); color: var(--yellow-dark); }
+.btn-signup { background: var(--yellow); color: var(--dark); font-weight: 700; }
+.btn-signup:hover { background: #e6ba00; transform: translateY(-1px); }
+
+/* 눈누 로고 우상단 고정 */
+.noonnu-logo-corner {
+  position: fixed; top: 14px; right: 18px;
+  z-index: 1100; width: 46px; height: 46px;
+  animation: logoFloat 3s ease-in-out infinite;
+}
+.noonnu-logo-corner img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(245,200,0,0.4));
+}
+@keyframes logoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+/* ===== 페이지 전환 ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== 히어로 (손글씨 믹스) ===== */
+.hero {
+  background: var(--white);
+  padding: 88px 24px 64px;
+  text-align: center;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: -80px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 350px;
+  background: radial-gradient(ellipse, rgba(245,200,0,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--yellow-light); border: 1.5px solid var(--yellow);
+  color: var(--yellow-dark); font-size: 12px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px; margin-bottom: 28px;
+  letter-spacing: 0.5px;
+  font-family: var(--font-gothic);
+}
+/* 히어로 타이틀: 손글씨 */
+.hero h1 {
+  font-size: clamp(52px, 9vw, 96px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  color: var(--dark);
+  margin-bottom: 10px;
+  font-family: var(--font-handwriting);
+}
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--yellow) 0%, var(--orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-handwriting);
+}
+/* 서브텍스트: 고딕 */
+.hero-sub {
+  font-size: 15px; color: var(--gray);
+  margin-bottom: 36px; line-height: 1.8;
+  font-family: var(--font-gothic);
+}
+.hero-btns {
+  display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+  margin-bottom: 56px;
+}
+.hero-btns a {
+  text-decoration: none; padding: 14px 28px;
+  border-radius: 28px; font-size: 15px; font-weight: 700;
+  transition: all 0.25s; display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-gothic);
+}
+.btn-primary {
+  background: var(--yellow); color: var(--dark);
+  box-shadow: 0 4px 20px rgba(245,200,0,0.35);
+}
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(245,200,0,0.45); }
+.btn-secondary {
+  background: var(--white); color: #444;
+  border: 2px solid #e8e8e8;
+}
+.btn-secondary:hover { border-color: var(--yellow); color: var(--yellow-dark); transform: translateY(-2px); }
+
+/* 통계 (고딕) */
+.stats-row {
+  display: flex; justify-content: center; gap: 52px; flex-wrap: wrap;
+}
+.stat-item { text-align: center; }
+.stat-num {
+  font-size: 38px; font-weight: 900;
+  color: var(--yellow);
+  font-family: var(--font-gothic);
+  font-variant-numeric: tabular-nums;
+}
+.stat-label { font-size: 12px; color: #aaa; margin-top: 3px; font-family: var(--font-gothic); }
+
+/* ===== 슬라이더 섹션 ===== */
+.slider-section {
+  padding: 64px 0 40px;
+  background: #fafafa; overflow: hidden;
+}
+.section-header {
+  max-width: 1280px; margin: 0 auto 32px;
+  padding: 0 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+/* 섹션 타이틀: 손글씨 포인트 */
+.section-title {
+  font-size: 24px; font-weight: 700;
+  color: var(--dark); letter-spacing: -0.3px;
+  font-family: var(--font-handwriting);
+}
+.section-title .gothic-label {
+  font-family: var(--font-gothic);
+  font-size: 13px; font-weight: 700;
+  color: var(--yellow-dark);
+  background: var(--yellow-light);
+  padding: 3px 10px; border-radius: 12px;
+  margin-right: 8px; vertical-align: middle;
+}
+.section-more {
+  text-decoration: none; font-size: 13px;
+  color: #999; font-weight: 500;
+  display: flex; align-items: center; gap: 4px;
+  transition: color 0.2s;
+  font-family: var(--font-gothic);
+}
+.section-more:hover { color: var(--yellow-dark); }
+
+/* 무한 슬라이더 */
+.slider-track-wrap {
+  position: relative; overflow: hidden;
+}
+.slider-track-wrap::before,
+.slider-track-wrap::after {
+  content: ''; position: absolute; top: 0; bottom: 0;
+  width: 80px; z-index: 2; pointer-events: none;
+}
+.slider-track-wrap::before { left: 0; background: linear-gradient(to right, #fafafa, transparent); }
+.slider-track-wrap::after { right: 0; background: linear-gradient(to left, #fafafa, transparent); }
+.slider-track {
+  display: flex; gap: 20px;
+  width: max-content;
+  animation: slideLeft 42s linear infinite;
+  padding: 8px 0;
+}
+.slider-track:hover { animation-play-state: paused; }
+@keyframes slideLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* 폰트 카드 */
+.font-card {
+  width: 220px; flex-shrink: 0;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.font-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--yellow);
+  box-shadow: 0 16px 40px rgba(245,200,0,0.18);
+}
+.font-card img {
+  width: 100%; height: 200px;
+  object-fit: cover; display: block; background: #f9f9f9;
+}
+.font-card-info { padding: 12px 14px; border-top: 1px solid #f5f5f5; }
+/* 카드 폰트명: 손글씨 */
+.font-card-name {
+  font-size: 14px; font-weight: 700; color: var(--dark);
+  margin-bottom: 2px;
+  font-family: var(--font-handwriting);
+}
+.font-card-maker { font-size: 11px; color: #bbb; font-family: var(--font-gothic); }
+.font-card-tag {
+  display: inline-block; margin-top: 6px;
+  font-size: 10px; font-weight: 700; padding: 2px 8px;
+  border-radius: 6px; font-family: var(--font-gothic);
+}
+.tag-gothic { background: #e3f2fd; color: #1976d2; }
+.tag-myungjo { background: #f3e5f5; color: #7b1fa2; }
+.tag-calli { background: #fff3e0; color: #f57c00; }
+
+/* ===== 공통 페이지 스타일 ===== */
+.page-title {
+  font-size: 32px; font-weight: 700; text-align: center;
+  margin-bottom: 12px; font-family: var(--font-handwriting);
+}
+.page-subtitle {
+  font-size: 15px; color: #999; text-align: center;
+  margin-bottom: 48px; font-family: var(--font-gothic);
+}
+
+/* ===== 무료 폰트 페이지 ===== */
+.free-page { padding: 52px 28px; max-width: 1280px; margin: 0 auto; }
+.filter-tabs {
+  display: flex; justify-content: center; gap: 10px;
+  margin-bottom: 40px; flex-wrap: wrap;
+}
+.filter-tab {
+  padding: 8px 20px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--white);
+  font-size: 14px; font-weight: 500; color: #666;
+  cursor: pointer; transition: all 0.2s;
+  font-family: var(--font-gothic);
+}
+.filter-tab:hover { border-color: var(--yellow); color: var(--yellow-dark); }
+.filter-tab.active { background: var(--yellow); border-color: var(--yellow); color: var(--dark); font-weight: 700; }
+
+.font-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+}
+
+/* ===== 폰트 찾기 페이지 ===== */
+.finder-page { padding: 52px 28px; max-width: 900px; margin: 0 auto; }
+.finder-page-header { text-align: center; margin-bottom: 44px; }
+.finder-tabs {
+  display: flex; border-bottom: 2px solid var(--border);
+  margin-bottom: 40px;
+}
+.finder-tab {
+  padding: 14px 28px; font-size: 15px; font-weight: 600;
+  color: #bbb; border: none; background: none;
+  cursor: pointer; border-bottom: 3px solid transparent;
+  margin-bottom: -2px; transition: all 0.2s;
+  font-family: var(--font-gothic);
+  display: flex; align-items: center; gap: 8px;
+}
+.finder-tab:hover { color: #555; }
+.finder-tab.active { color: var(--dark); border-bottom-color: var(--yellow); }
+.finder-content { display: none; }
+.finder-content.active { display: block; }
+
+/* URL 찾기 */
+.url-finder, .img-finder, .ask-finder {
+  background: #fafafa; border: 1.5px solid var(--border);
+  border-radius: 20px; padding: 44px;
+}
+/* 찾기 타이틀: 손글씨 */
+.finder-box-title {
+  font-size: 20px; font-weight: 700; margin-bottom: 8px;
+  font-family: var(--font-handwriting);
+}
+.finder-box-desc { font-size: 14px; color: #999; margin-bottom: 24px; font-family: var(--font-gothic); }
+.url-input-wrap {
+  display: flex; gap: 12px;
+  background: var(--white); border: 1.5px solid #e8e8e8;
+  border-radius: 28px; padding: 8px 8px 8px 20px;
+  transition: border-color 0.2s; margin-bottom: 14px;
+}
+.url-input-wrap:focus-within { border-color: var(--yellow); }
+.url-input-wrap input {
+  flex: 1; border: none; background: transparent;
+  font-size: 14px; outline: none; font-family: var(--font-gothic);
+}
+.url-input-wrap button {
+  background: var(--yellow); color: var(--dark);
+  border: none; padding: 10px 24px;
+  border-radius: 22px; font-weight: 700; font-size: 14px;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-gothic);
+}
+.url-input-wrap button:hover { background: #e6ba00; }
+.url-tips { font-size: 12px; color: #ccc; font-family: var(--font-gothic); }
+.url-tips span { color: var(--yellow-dark); font-weight: 600; }
+
+.drop-zone {
+  border: 2.5px dashed #e0e0e0;
+  border-radius: 16px; padding: 64px 40px;
+  text-align: center; cursor: pointer;
+  transition: all 0.3s; background: var(--white);
+  position: relative;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: var(--yellow); background: var(--yellow-light);
+}
+.drop-zone-icon { font-size: 52px; margin-bottom: 16px; display: block; }
+/* 드롭존 텍스트: 손글씨 */
+.drop-zone-text {
+  font-size: 17px; font-weight: 700; color: #333; margin-bottom: 8px;
+  font-family: var(--font-handwriting);
+}
+.drop-zone-sub { font-size: 13px; color: #bbb; font-family: var(--font-gothic); }
+.drop-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.img-finder-or {
+  text-align: center; margin: 20px 0;
+  font-size: 13px; color: #ccc; position: relative;
+  font-family: var(--font-gothic);
+}
+.img-finder-or::before, .img-finder-or::after {
+  content: ''; position: absolute; top: 50%;
+  width: 42%; height: 1px; background: #eee;
+}
+.img-finder-or::before { left: 0; }
+.img-finder-or::after { right: 0; }
+.img-finder-paste {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--white); border: 1.5px solid #e8e8e8;
+  border-radius: 12px; padding: 14px 20px;
+  font-size: 14px; color: #999; cursor: pointer;
+  transition: border-color 0.2s; font-family: var(--font-gothic);
+}
+.img-finder-paste:hover { border-color: var(--yellow); }
+.paste-kbd {
+  background: #f5f5f5; border: 1px solid #ddd;
+  border-radius: 6px; padding: 2px 8px;
+  font-size: 12px; font-weight: 600; color: #666;
+  font-family: var(--font-gothic);
+}
+.ask-form { display: flex; flex-direction: column; gap: 16px; }
+.ask-form label { font-size: 13px; font-weight: 600; color: #666; margin-bottom: 4px; display: block; font-family: var(--font-gothic); }
+.ask-form input, .ask-form textarea {
+  width: 100%; padding: 12px 16px;
+  border: 1.5px solid #e8e8e8; border-radius: 12px;
+  font-size: 14px; font-family: var(--font-gothic);
+  outline: none; transition: border-color 0.2s; background: var(--white);
+}
+.ask-form input:focus, .ask-form textarea:focus { border-color: var(--yellow); }
+.ask-form textarea { min-height: 120px; resize: vertical; }
+.ask-form button {
+  background: var(--yellow); color: var(--dark);
+  border: none; padding: 14px 32px;
+  border-radius: 28px; font-weight: 700; font-size: 15px;
+  cursor: pointer; transition: all 0.25s; align-self: flex-start;
+  font-family: var(--font-gothic);
+}
+.ask-form button:hover { background: #e6ba00; transform: translateY(-2px); }
+
+/* ===== 랭킹 페이지 ===== */
+.ranking-page { padding: 52px 28px; max-width: 800px; margin: 0 auto; }
+.ranking-list { display: flex; flex-direction: column; gap: 8px; }
+.ranking-item {
+  display: flex; align-items: center; gap: 20px;
+  padding: 16px 20px; background: var(--white);
+  border: 1.5px solid var(--border); border-radius: 14px;
+  cursor: pointer; transition: all 0.25s;
+}
+.ranking-item:hover {
+  border-color: var(--yellow);
+  transform: translateX(6px);
+  box-shadow: 0 4px 16px rgba(245,200,0,0.15);
+}
+.rank-num {
+  font-size: 22px; font-weight: 900;
+  width: 40px; text-align: center; flex-shrink: 0;
+  font-family: var(--font-gothic);
+}
+.rank-1 { color: var(--yellow); }
+.rank-2 { color: #aaa; }
+.rank-3 { color: #cd7f32; }
+.rank-other { color: #ddd; font-size: 16px; }
+.rank-info { flex: 1; }
+/* 랭킹 폰트명: 손글씨 */
+.rank-name {
+  font-size: 17px; font-weight: 700; color: var(--dark); margin-bottom: 3px;
+  font-family: var(--font-handwriting);
+}
+.rank-maker { font-size: 12px; color: #bbb; font-family: var(--font-gothic); }
+.rank-count { font-size: 13px; color: #ccc; flex-shrink: 0; font-family: var(--font-gothic); }
+.rank-change {
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+  padding: 3px 8px; border-radius: 8px; font-family: var(--font-gothic);
+}
+.rank-up { background: #e8f5e9; color: #4caf50; }
+.rank-down { background: #fce4ec; color: #e91e63; }
+.rank-same { background: #f5f5f5; color: #bbb; }
+
+/* ===== 마켓 페이지 ===== */
+.market-page { padding: 52px 28px; max-width: 1280px; margin: 0 auto; }
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+.market-card {
+  background: var(--white); border: 1.5px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+  cursor: pointer; transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.market-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.1);
+  border-color: var(--yellow);
+}
+.market-card-img {
+  width: 100%; aspect-ratio: 4/3;
+  object-fit: cover; display: block;
+  background: #f5f5f5;
+}
+.market-card-body { padding: 16px 18px; }
+/* 마켓 카드 이름: 손글씨 */
+.market-card-name {
+  font-size: 17px; font-weight: 700; margin-bottom: 4px;
+  font-family: var(--font-handwriting);
+}
+.market-card-maker { font-size: 12px; color: #bbb; margin-bottom: 12px; font-family: var(--font-gothic); }
+.market-card-price { display: flex; align-items: center; justify-content: space-between; }
+.price-tag { font-size: 18px; font-weight: 900; color: var(--dark); font-family: var(--font-gothic); }
+.price-badge {
+  font-size: 11px; padding: 3px 10px;
+  border-radius: 10px; font-weight: 700;
+  background: var(--yellow-light); color: var(--yellow-dark);
+  border: 1px solid var(--yellow); font-family: var(--font-gothic);
+}
+.market-card-btn {
+  display: block; width: 100%; margin-top: 12px;
+  background: var(--yellow); color: var(--dark);
+  border: none; padding: 10px;
+  border-radius: 12px; font-weight: 700; font-size: 14px;
+  cursor: pointer; transition: all 0.2s; font-family: var(--font-gothic);
+}
+.market-card-btn:hover { background: #e6ba00; }
+
+/* ===== 푸터 (고딕 전용) ===== */
+footer {
+  background: #111;
+  color: rgba(255,255,255,0.65);
+  padding: 60px 28px 32px;
+  margin-top: 80px;
+  font-family: var(--font-gothic);
+}
+.footer-inner { max-width: 1280px; margin: 0 auto; }
+.footer-top {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 52px; margin-bottom: 48px;
+}
+.footer-brand .brand-name {
+  font-size: 20px; font-weight: 900; color: #fff;
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-gothic);
+}
+.footer-brand .brand-name img {
+  width: 26px; height: 26px; object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+.footer-brand p {
+  font-size: 13px; line-height: 1.9; color: rgba(255,255,255,0.4);
+  margin-bottom: 20px; font-family: var(--font-gothic);
+}
+.footer-social { display: flex; gap: 8px; }
+.social-btn {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  text-decoration: none; color: rgba(255,255,255,0.6);
+  font-size: 14px; transition: all 0.2s;
+}
+.social-btn:hover { background: var(--yellow); color: var(--dark); }
+
+.footer-col h4 { color: #fff; font-size: 15px; margin-bottom: 24px; font-weight: 700; }
+.footer-col ul { list-style: none; }
+.footer-col ul li { margin-bottom: 12px; }
+.footer-col ul li a {
+  text-decoration: none; color: rgba(255,255,255,0.45);
+  font-size: 13px; transition: color 0.2s;
+}
+.footer-col ul li a:hover { color: var(--yellow); }
+
+.footer-divider { height: 1px; background: rgba(255,255,255,0.08); margin-bottom: 32px; }
+.footer-bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-bottom p { font-size: 12px; color: rgba(255,255,255,0.3); }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  text-decoration: none; font-size: 12px; color: rgba(255,255,255,0.3);
+  transition: color 0.2s;
+}
+.footer-links a:hover { color: #fff; }
+/* ===== 구독 페이지 스타일 ===== */
+.pricing-page { padding: 52px 28px; max-width: 1280px; margin: 0 auto; text-align: center; }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+.pricing-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  transition: all 0.3s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.pricing-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+  border-color: var(--yellow);
+}
+.pricing-card.popular {
+  border-color: var(--yellow);
+  box-shadow: 0 10px 30px rgba(245,200,0,0.15);
+}
+.popular-badge {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--yellow);
+  color: var(--dark);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.pricing-name { font-size: 20px; font-weight: 700; margin-bottom: 12px; font-family: var(--font-gothic); }
+.pricing-price { font-size: 36px; font-weight: 900; margin-bottom: 24px; font-family: var(--font-gothic); }
+.pricing-price span { font-size: 16px; font-weight: 500; color: #999; }
+.pricing-features { list-style: none; margin-bottom: 32px; text-align: left; flex: 1; }
+.pricing-features li { margin-bottom: 12px; font-size: 14px; color: #555; display: flex; align-items: center; gap: 8px; }
+.pricing-features li::before { content: '✓'; color: var(--yellow-dark); font-weight: bold; }
+.pricing-btn {
+  background: var(--light-gray);
+  color: var(--dark);
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.pricing-card.popular .pricing-btn { background: var(--yellow); }
+.pricing-btn:hover { background: var(--yellow-dark); color: var(--white); }
+
+
+.pricing-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 32px;
+  margin-bottom: 40px;
+}
+.toggle-label { font-size: 16px; font-weight: 500; color: #666; cursor: pointer; }
+.toggle-label.active { color: var(--dark); font-weight: 700; }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px; width: 26px;
+  left: 4px; bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+input:checked + .slider { background-color: var(--yellow); }
+input:checked + .slider:before { transform: translateX(26px); }
+
+.pricing-plan-content { display: none; }
+.pricing-plan-content.active { display: grid; }
+.font-detail-page { padding: 52px 28px; max-width: 1000px; margin: 0 auto; }
+.font-detail-header { display: flex; gap: 40px; margin-bottom: 60px; align-items: flex-start; }
+.font-detail-preview { flex: 1; background: #f9f9f9; border: 1.5px solid var(--border); border-radius: 24px; padding: 40px; min-height: 300px; display: flex; flex-direction: column; }
+.preview-label { font-size: 13px; color: #999; margin-bottom: 20px; font-weight: 500; }
+.preview-text { font-size: 48px; color: var(--dark); line-height: 1.4; outline: none; border: none; background: transparent; width: 100%; resize: none; font-family: var(--font-gothic); }
+.font-detail-info { width: 320px; }
+.detail-name { font-size: 32px; font-weight: 900; margin-bottom: 8px; font-family: var(--font-gothic); }
+.detail-maker { font-size: 16px; color: #888; margin-bottom: 24px; }
+.detail-meta { border-top: 1px solid #eee; padding-top: 24px; margin-bottom: 32px; }
+.meta-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 14px; }
+.meta-label { color: #999; }
+.meta-value { color: var(--dark); font-weight: 500; }
+.download-btn { display: block; width: 100%; background: var(--yellow); color: var(--dark); text-align: center; padding: 16px; border-radius: 16px; font-weight: 700; text-decoration: none; transition: all 0.2s; box-shadow: 0 4px 14px rgba(245,200,0,0.3); }
+.download-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,200,0,0.4); }
+
+.font-detail-body { line-height: 1.8; color: #444; }
+.detail-section { margin-bottom: 48px; }
+.section-h3 { font-size: 20px; font-weight: 700; color: var(--dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section-h3::before { content: ''; width: 4px; height: 18px; background: var(--yellow); border-radius: 2px; }
+.license-box { background: #fdfae6; border: 1px solid #f5efc8; border-radius: 16px; padding: 24px; font-size: 14px; }
+.recommend-page { padding: 52px 28px; max-width: 1000px; margin: 0 auto; text-align: center; }
+.recommend-upload-area {
+  background: #fdfdfd;
+  border: 2px dashed #e0e0e0;
+  border-radius: 32px;
+  padding: 80px 40px;
+  margin-top: 40px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.recommend-upload-area:hover {
+  border-color: var(--yellow);
+  background: var(--yellow-light);
+}
+.recommend-icon { font-size: 64px; margin-bottom: 24px; display: block; }
+.recommend-title { font-size: 24px; font-weight: 700; margin-bottom: 12px; }
+.recommend-desc { color: #888; font-size: 16px; margin-bottom: 32px; }
+.recommend-btn-large {
+  background: var(--dark);
+  color: var(--yellow);
+  padding: 18px 48px;
+  border-radius: 32px;
+  font-weight: 700;
+  font-size: 18px;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+}
+.recommend-btn-large:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+.recommend-results { margin-top: 60px; display: none; text-align: left; }
+.recommend-results.active { display: block; }
+.results-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; margin-top: 32px; }
+</style>
+</head>
+<body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="scroll-progress"></div>
+
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo-area" onclick="showPage('home'); return false;">
+      <span style="color:var(--yellow); font-size:24px;">눈</span>누
+    </a>
+    <nav class="main-nav">
+      <a href="#" id="nav-recommend" onclick="showPage(\'recommend\'); return false;">폰트 추천해드립니다</a>
+      <a href="#" id="nav-home" class="active" onclick="showPage('home'); return false;">홈</a>
+      <a href="#" id="nav-free" onclick="showPage('free'); return false;">무료 폰트</a>
+      <a href="#" id="nav-finder" onclick="showPage('finder'); return false;">폰트 찾기</a>
+      <a href="#" id="nav-ranking" onclick="showPage('ranking'); return false;">랭킹</a>
+      <a href="#" id="nav-market" class="market-link" onclick="showPage('market'); return false;">눈누마켓 ✦</a>
+      <a href="#" id="nav-subscription" onclick="showPage(\'subscription\'); return false;">이용권 구독</a>
+    </nav>
+    <div class="header-search">
+      <input type="text" placeholder="폰트 이름을 검색해보세요">
+    </div>
+    <div class="header-right">
+      <a href="#" class="btn-login">로그인</a>
+      <a href="#" class="btn-signup">회원가입</a>
+    </div>
+  </div>
+</header>
+
+<div class="noonnu-logo-corner">
+  <img src="img/로고.png" alt="눈누">
+</div>
+
+<!-- ===== 홈 페이지 ===== -->
+<div id="page-home" class="page active">
+  <section class="hero">
+    <div class="hero-badge">✨ 2026년 가장 사랑받는 무료 폰트</div>
+    <h1>글꼴이<br><span class="highlight">세상을 바꾼다</span></h1>
+    <p class="hero-sub">라이선스 걱정 없는 무료 폰트 1,800여 종을 지금 바로 찾아보세요.<br>디자이너와 개발자를 위한 한글 폰트 검색 엔진, 눈누</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-primary" onclick="showPage('free'); return false;">✦ 무료 폰트 보러가기</a>
+      <a href="#" class="btn-secondary" onclick="showPage('finder'); return false;">🔍 폰트 찾기</a>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num" data-target="1842">0</div><div class="stat-label">등록된 무료 폰트</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="256">0</div><div class="stat-label">참여 제작사</div></div>
+      <div class="stat-item"><div class="stat-num" data-target="42109">0</div><div class="stat-label">오늘의 다운로드</div></div>
+    </div>
+  </section>
+
+  <section class="slider-section">
+    <div class="section-header">
+      <h2 class="section-title"><span class="gothic-label">HOT</span>지금 뜨는 폰트</h2>
+      <a href="#" class="section-more" onclick="showPage('free'); return false;">무료 폰트 전체 보기 →</a>
+    </div>
+    <div class="slider-track-wrap">
+      <div class="slider-track">
+        <div class="font-card"><img src="img/고딕_산스체.png" alt="G마켓 산스"><div class="font-card-info"><div class="font-card-name">G마켓 산스</div><div class="font-card-maker">G마켓</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/고딕_에이투지체.png" alt="에이투지체"><div class="font-card-info"><div class="font-card-name">에이투지체</div><div class="font-card-maker">오토노머스에이투지 X 이주임</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card" onclick="showPage(\'font-pyeongchang\'); return false;"><img src="img/고딕_평창체.png" alt="평창평화체"><div class="font-card-info"><div class="font-card-name">평창평화체</div><div class="font-card-maker">평창군</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/고딕_프리텐다드.png" alt="프리텐다드"><div class="font-card-info"><div class="font-card-name">프리텐다드</div><div class="font-card-maker">길형진 (orioncactus)</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/명조_가평한석봉체.png" alt="가평 한석봉 큰붓"><div class="font-card-info"><div class="font-card-name">가평 한석봉 큰붓</div><div class="font-card-maker">가평군청 X 윤디자인그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_꽃길체.png" alt="꽃길"><div class="font-card-info"><div class="font-card-name">꽃길</div><div class="font-card-maker">상상토미</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/명조_김생체.png" alt="충주김생체"><div class="font-card-info"><div class="font-card-name">충주김생체</div><div class="font-card-maker">충주시 X 투게더그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/명조_아리따부리체.png" alt="아리따부리"><div class="font-card-info"><div class="font-card-name">아리따부리</div><div class="font-card-maker">아모레퍼시픽</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_르네상스체.png" alt="OG 르네상스비밀"><div class="font-card-info"><div class="font-card-name">OG 르네상스비밀</div><div class="font-card-maker">Lee*** X 온글잎</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/명조_함초롬체.png" alt="함초롬바탕체"><div class="font-card-info"><div class="font-card-name">함초롬바탕체</div><div class="font-card-maker">한글과컴퓨터</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_노회찬체.png" alt="노회찬체"><div class="font-card-info"><div class="font-card-name">노회찬체</div><div class="font-card-maker">노회찬재단</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/캘리_립퀴드체.png" alt="잉크립퀴드체"><div class="font-card-info"><div class="font-card-name">잉크립퀴드체</div><div class="font-card-maker">더페이스샵</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <!-- 복제 (무한 슬라이드용) -->
+        <div class="font-card"><img src="img/고딕_산스체.png" alt="G마켓 산스"><div class="font-card-info"><div class="font-card-name">G마켓 산스</div><div class="font-card-maker">G마켓</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/고딕_에이투지체.png" alt="에이투지체"><div class="font-card-info"><div class="font-card-name">에이투지체</div><div class="font-card-maker">오토노머스에이투지 X 이주임</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card" onclick="showPage(\'font-pyeongchang\'); return false;"><img src="img/고딕_평창체.png" alt="평창평화체"><div class="font-card-info"><div class="font-card-name">평창평화체</div><div class="font-card-maker">평창군</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/고딕_프리텐다드.png" alt="프리텐다드"><div class="font-card-info"><div class="font-card-name">프리텐다드</div><div class="font-card-maker">길형진 (orioncactus)</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+        <div class="font-card"><img src="img/명조_가평한석봉체.png" alt="가평 한석봉 큰붓"><div class="font-card-info"><div class="font-card-name">가평 한석봉 큰붓</div><div class="font-card-maker">가평군청 X 윤디자인그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_꽃길체.png" alt="꽃길"><div class="font-card-info"><div class="font-card-name">꽃길</div><div class="font-card-maker">상상토미</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/명조_김생체.png" alt="충주김생체"><div class="font-card-info"><div class="font-card-name">충주김생체</div><div class="font-card-maker">충주시 X 투게더그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/명조_아리따부리체.png" alt="아리따부리"><div class="font-card-info"><div class="font-card-name">아리따부리</div><div class="font-card-maker">아모레퍼시픽</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_르네상스체.png" alt="OG 르네상스비밀"><div class="font-card-info"><div class="font-card-name">OG 르네상스비밀</div><div class="font-card-maker">Lee*** X 온글잎</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/명조_함초롬체.png" alt="함초롬바탕체"><div class="font-card-info"><div class="font-card-name">함초롬바탕체</div><div class="font-card-maker">한글과컴퓨터</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+        <div class="font-card"><img src="img/캘리_노회찬체.png" alt="노회찬체"><div class="font-card-info"><div class="font-card-name">노회찬체</div><div class="font-card-maker">노회찬재단</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+        <div class="font-card"><img src="img/캘리_립퀴드체.png" alt="잉크립퀴드체"><div class="font-card-info"><div class="font-card-name">잉크립퀴드체</div><div class="font-card-maker">더페이스샵</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+      </div>
+    </div>
+  </section>
+</div><!-- /page-home -->
+
+<!-- ===== 무료 폰트 페이지 ===== -->
+<div id="page-free" class="page">
+  <div class="free-page">
+    <h2 class="page-title">무료 폰트</h2>
+    <p class="page-subtitle">상업적 이용 가능한 무료 한글 폰트 모음</p>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterFonts(this, 'all')">전체</button>
+      <button class="filter-tab" onclick="filterFonts(this, 'gothic')">고딕</button>
+      <button class="filter-tab" onclick="filterFonts(this, 'myungjo')">명조</button>
+      <button class="filter-tab" onclick="filterFonts(this, 'calli')">캘리</button>
+    </div>
+    <div class="font-grid">
+      <div class="font-card" data-cat="gothic"><img src="img/고딕_산스체.png" alt="G마켓 산스"><div class="font-card-info"><div class="font-card-name">G마켓 산스</div><div class="font-card-maker">G마켓</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+      <div class="font-card" data-cat="gothic"><img src="img/고딕_에이투지체.png" alt="에이투지체"><div class="font-card-info"><div class="font-card-name">에이투지체</div><div class="font-card-maker">오토노머스에이투지 X 이주임</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+      <div class="font-card" data-cat="gothic" onclick="showPage(\'font-pyeongchang\'); return false;"><img src="img/고딕_평창체.png" alt="평창평화체"><div class="font-card-info"><div class="font-card-name">평창평화체</div><div class="font-card-maker">평창군</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+      <div class="font-card" data-cat="gothic"><img src="img/고딕_프리텐다드.png" alt="프리텐다드"><div class="font-card-info"><div class="font-card-name">프리텐다드</div><div class="font-card-maker">길형진 (orioncactus)</div><span class="font-card-tag tag-gothic">고딕</span></div></div>
+      <div class="font-card" data-cat="myungjo"><img src="img/명조_가평한석봉체.png" alt="가평 한석봉 큰붓"><div class="font-card-info"><div class="font-card-name">가평 한석봉 큰붓</div><div class="font-card-maker">가평군청 X 윤디자인그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+      <div class="font-card" data-cat="calli"><img src="img/캘리_꽃길체.png" alt="꽃길"><div class="font-card-info"><div class="font-card-name">꽃길</div><div class="font-card-maker">상상토미</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+      <div class="font-card" data-cat="myungjo"><img src="img/명조_김생체.png" alt="충주김생체"><div class="font-card-info"><div class="font-card-name">충주김생체</div><div class="font-card-maker">충주시 X 투게더그룹</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+      <div class="font-card" data-cat="myungjo"><img src="img/명조_아리따부리체.png" alt="아리따부리"><div class="font-card-info"><div class="font-card-name">아리따부리</div><div class="font-card-maker">아모레퍼시픽</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+      <div class="font-card" data-cat="calli"><img src="img/캘리_르네상스체.png" alt="OG 르네상스비밀"><div class="font-card-info"><div class="font-card-name">OG 르네상스비밀</div><div class="font-card-maker">Lee*** X 온글잎</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+      <div class="font-card" data-cat="myungjo"><img src="img/명조_함초롬체.png" alt="함초롬바탕체"><div class="font-card-info"><div class="font-card-name">함초롬바탕체</div><div class="font-card-maker">한글과컴퓨터</div><span class="font-card-tag tag-myungjo">명조</span></div></div>
+      <div class="font-card" data-cat="calli"><img src="img/캘리_노회찬체.png" alt="노회찬체"><div class="font-card-info"><div class="font-card-name">노회찬체</div><div class="font-card-maker">노회찬재단</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+      <div class="font-card" data-cat="calli"><img src="img/캘리_립퀴드체.png" alt="잉크립퀴드체"><div class="font-card-info"><div class="font-card-name">잉크립퀴드체</div><div class="font-card-maker">더페이스샵</div><span class="font-card-tag tag-calli">캘리</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 폰트 찾기 페이지 ===== -->
+<div id="page-finder" class="page">
+  <div class="finder-page">
+    <div class="finder-page-header">
+      <h2 class="page-title">🔍 폰트 찾기</h2>
+      <p class="page-subtitle">어디서 본 폰트인지 모르겠다면? URL, 이미지, 또는 직접 문의해보세요.</p>
+    </div>
+    <div class="finder-tabs">
+      <button class="finder-tab active" id="tab-url" onclick="setFinderTab('url')">🔗 URL로 찾기</button>
+      <button class="finder-tab" id="tab-img" onclick="setFinderTab('img')">🖼 이미지로 찾기</button>
+      <button class="finder-tab" id="tab-ask" onclick="setFinderTab('ask')">💬 문의하기</button>
+    </div>
+
+    <div class="finder-content active" id="content-url">
+      <div class="url-finder">
+        <div class="finder-box-title">URL로 폰트 찾기</div>
+        <p class="finder-box-desc">폰트가 사용된 웹페이지 URL을 입력하면 해당 폰트를 분석해드립니다.</p>
+        <div class="url-input-wrap">
+          <input type="url" placeholder="https://example.com 입력">
+          <button onclick="alert('폰트 분석 중입니다...')">분석하기</button>
+        </div>
+        <p class="url-tips"><span>TIP</span> 폰트가 사용된 페이지의 전체 URL을 복사해서 붙여넣으세요. CSS @font-face 또는 Google Fonts 링크를 자동으로 감지합니다.</p>
+      </div>
+    </div>
+
+    <div class="finder-content" id="content-img">
+      <div class="img-finder">
+        <div class="finder-box-title">이미지로 폰트 찾기</div>
+        <p class="finder-box-desc">폰트가 포함된 이미지를 업로드하거나 붙여넣어주세요.</p>
+        <div class="drop-zone" id="dropZone" ondrop="handleDrop(event)" ondragover="event.preventDefault(); this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')">
+          <span class="drop-zone-icon">📁</span>
+          <div class="drop-zone-text">이미지 파일을 여기에 끌어다 놓으세요</div>
+          <p class="drop-zone-sub">또는 클릭하여 파일 선택 (PNG, JPG, 최대 5MB)</p>
+          <input type="file" accept="image/*" onchange="handleFileSelect(event)">
+        </div>
+        <div class="img-finder-or">OR</div>
+        <div class="img-finder-paste">
+          <span>📋 클립보드 이미지 붙여넣기</span>
+          <span class="paste-kbd">Ctrl + V</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="finder-content" id="content-ask">
+      <div class="ask-finder">
+        <div class="finder-box-title">폰트 문의하기</div>
+        <p class="finder-box-desc">찾는 폰트를 설명해주시면 눈누 커뮤니티와 전문가가 답변해드립니다.</p>
+        <form class="ask-form" onsubmit="event.preventDefault(); alert('문의가 접수되었습니다!')">
+          <div><label>이미지 첨부 (선택)</label><input type="file" accept="image/*" style="padding:8px 12px;"></div>
+          <div><label>폰트 설명</label><textarea placeholder="어디서 보셨나요? 어떤 느낌의 폰트인가요? 최대한 자세히 설명해주세요."></textarea></div>
+          <div><label>이메일 (답변 받을 주소)</label><input type="email" placeholder="your@email.com"></div>
+          <button type="submit">문의 보내기 →</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 랭킹 페이지 ===== -->
+<div id="page-ranking" class="page">
+  <div class="ranking-page">
+    <h2 class="page-title">폰트 랭킹</h2>
+    <p class="page-subtitle">이번 주 가장 많이 조회된 폰트 TOP 10</p>
+    <div class="ranking-list">
+      <div class="ranking-item"><div class="rank-num rank-1">1</div><div class="rank-info"><div class="rank-name">프리텐다드</div><div class="rank-maker">길형진 (orioncactus)</div></div><span class="rank-change rank-same">—</span><div class="rank-count">조회 124,832</div></div>
+      <div class="ranking-item"><div class="rank-num rank-2">2</div><div class="rank-info"><div class="rank-name">G마켓 산스</div><div class="rank-maker">G마켓</div></div><span class="rank-change rank-up">▲2</span><div class="rank-count">조회 98,441</div></div>
+      <div class="ranking-item"><div class="rank-num rank-3">3</div><div class="rank-info"><div class="rank-name">에이투지체</div><div class="rank-maker">오토노머스에이투지 X 이주임</div></div><span class="rank-change rank-down">▼1</span><div class="rank-count">조회 87,220</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">4</div><div class="rank-info"><div class="rank-name">아리따부리</div><div class="rank-maker">아모레퍼시픽</div></div><span class="rank-change rank-up">▲3</span><div class="rank-count">조회 72,108</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">5</div><div class="rank-info"><div class="rank-name">함초롬바탕체</div><div class="rank-maker">한글과컴퓨터</div></div><span class="rank-change rank-same">—</span><div class="rank-count">조회 65,390</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">6</div><div class="rank-info"><div class="rank-name">평창평화체</div><div class="rank-maker">평창군</div></div><span class="rank-change rank-up">▲1</span><div class="rank-count">조회 58,774</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">7</div><div class="rank-info"><div class="rank-name">충주김생체</div><div class="rank-maker">충주시 X 투게더그룹</div></div><span class="rank-change rank-down">▼2</span><div class="rank-count">조회 51,002</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">8</div><div class="rank-info"><div class="rank-name">가평 한석봉 큰붓</div><div class="rank-maker">가평군청 X 윤디자인그룹</div></div><span class="rank-change rank-up">▲4</span><div class="rank-count">조회 44,881</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">9</div><div class="rank-info"><div class="rank-name">꽃길</div><div class="rank-maker">상상토미</div></div><span class="rank-change rank-same">—</span><div class="rank-count">조회 38,550</div></div>
+      <div class="ranking-item"><div class="rank-num rank-other">10</div><div class="rank-info"><div class="rank-name">노회찬체</div><div class="rank-maker">노회찬재단</div></div><span class="rank-change rank-up">▲2</span><div class="rank-count">조회 31,220</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 마켓 페이지 ===== -->
+<div id="page-market" class="page">
+  <div class="market-page">
+    <h2 class="page-title">✦ 눈누마켓</h2>
+    <p class="page-subtitle">더 특별한 프리미엄 유료 폰트를 만나보세요</p>
+  </div>
+</div>
+
+<!-- ===== 이용권 구독 페이지 ===== -->
+<div id="page-subscription" class="page">
+  <div class="pricing-page">
+    <h2 class="page-title">이용권 구독</h2>
+    <p class="page-subtitle">눈누의 프리미엄 서비스를 합리적인 가격에 이용해보세요</p>
+    
+    <div class="pricing-grid">
+      <!-- 베이직 -->
+      <div class="pricing-card">
+        <h3 class="pricing-name">베이직 (Basic)</h3>
+        <div class="pricing-price">무료 <span>/ 평생</span></div>
+        <ul class="pricing-features">
+          <li>1,800여 종 무료 폰트 검색</li>
+          <li>폰트 찾기 서비스 이용</li>
+          <li>개인용 프로젝트 사용 가능</li>
+        </ul>
+        <a href="#" class="pricing-btn">현재 이용 중</a>
+      </div>
+      
+      <!-- 프로 -->
+      <div class="pricing-card popular">
+        <div class="popular-badge">가장 인기있는 플랜</div>
+        <h3 class="pricing-name">프로 (Pro)</h3>
+        <div class="pricing-price">₩9,900 <span>/ 월</span></div>
+        <ul class="pricing-features">
+          <li>베이직의 모든 기능</li>
+          <li><strong>눈누마켓 프리미엄 폰트 10% 할인</strong></li>
+          <li>광고 없는 쾌적한 환경</li>
+          <li>상업용 프로젝트 라이선스 지원</li>
+          <li>우선 고객 지원</li>
+        </ul>
+        <a href="#" class="pricing-btn" onclick="alert('결제 페이지로 이동합니다.'); return false;">구독하기</a>
+      </div>
+      
+      <!-- 비즈니스 -->
+      <div class="pricing-card">
+        <h3 class="pricing-name">비즈니스 (Business)</h3>
+        <div class="pricing-price">₩29,900 <span>/ 월</span></div>
+        <ul class="pricing-features">
+          <li>프로의 모든 기능</li>
+          <li><strong>팀 단위 라이선스 관리</strong></li>
+          <li>전담 매니저 매칭</li>
+          <li>맞춤형 폰트 컨설팅</li>
+          <li>API 연동 지원</li>
+        </ul>
+        <a href="#" class="pricing-btn" onclick="alert('비즈니스 상담으로 연결합니다.'); return false;">문의하기</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-font-pyeongchang" class="page">
+  <div class="font-detail-page">
+    <div class="font-detail-header">
+      <div class="font-detail-preview">
+        <div class="preview-label">미리보기 (직접 입력해보세요)</div>
+        <textarea class="preview-text" spellcheck="false">평창의 평화와 활력을 담은 글꼴, 평창평화체</textarea>
+      </div>
+      <div class="font-detail-info">
+        <h2 class="detail-name">평창평화체</h2>
+        <p class="detail-maker">평창군</p>
+        <div class="detail-meta">
+          <div class="meta-item"><span class="meta-label">카테고리</span><span class="meta-value">고딕</span></div>
+          <div class="meta-item"><span class="meta-label">등록일</span><span class="meta-value">2023.10.12</span></div>
+          <div class="meta-item"><span class="meta-label">조회수</span><span class="meta-value">58,774</span></div>
+        </div>
+        <a href="#" class="download-btn" onclick="alert('폰트 다운로드 페이지로 연결합니다.'); return false;">무료 다운로드</a>
+      </div>
+    </div>
+    
+    <div class="font-detail-body">
+      <div class="detail-section">
+        <h3 class="section-h3">폰트 소개</h3>
+        <p>평창평화체는 2018 평창 동계올림픽의 성공적인 개최를 기념하고, 평화의 도시 평창의 이미지를 확산시키기 위해 제작된 서체입니다. 힘차고 역동적인 획의 흐름과 현대적인 고딕 스타일이 조화를 이루어 높은 가독성과 상징성을 동시에 갖추고 있습니다.</p>
+      </div>
+      
+      <div class="detail-section">
+        <h3 class="section-h3">라이선스 안내</h3>
+        <div class="license-box">
+          <p>평창평화체의 지적 재산권은 평창군에 있습니다. 평창평화체는 개인 및 기업 사용자를 포함한 모든 사용자에게 무료로 제공되며 자유롭게 사용할 수 있습니다.</p>
+          <ul style="margin-top:12px; padding-left:20px;">
+            <li>인쇄물, 광고물, 온라인 등 상업적 목적으로 사용 가능</li>
+            <li>글꼴 자체를 유료로 판매하는 행위는 금지</li>
+            <li>글꼴을 수정하거나 재배포하는 경우 출처 표기 권장</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-recommend" class="page">
+  <div class="recommend-page">
+    <h2 class="page-title">폰트 추천해드립니다</h2>
+    <p class="page-subtitle">이미지 속 폰트와 가장 유사한 눈누의 무료 폰트를 찾아드려요</p>
+    
+    <div class="recommend-upload-area" onclick="document.getElementById('recommend-file').click()">
+      <span class="recommend-icon">📸</span>
+      <h3 class="recommend-title">사진이나 이미지를 업로드하세요</h3>
+      <p class="recommend-desc">이미지를 드래그하거나 클릭하여 파일을 선택해주세요 (JPG, PNG)</p>
+      <input type="file" id="recommend-file" hidden accept="image/*" onchange="processRecommendation(this)">
+      <span class="recommend-btn-large">이미지 선택하기</span>
+    </div>
+
+    <div class="recommend-results" id="recommend-results">
+      <h3 class="section-h3">분석 결과: 추천 폰트</h3>
+      <div class="results-grid">
+        <!-- 결과는 JS로 동적 생성되거나 예시로 보여줌 -->
+        <div class="font-card" onclick="showPage('font-pyeongchang')">
+          <img src="img/고딕_평창체.png" alt="평창평화체">
+          <div class="font-card-info">
+            <div class="font-card-name">평창평화체</div>
+            <div class="font-card-maker">평창군</div>
+            <span class="font-card-tag tag-gothic">유사도 98%</span>
+          </div>
+        </div>
+        <div class="font-card">
+          <img src="img/고딕_프리텐다드.png" alt="프리텐다드">
+          <div class="font-card-info">
+            <div class="font-card-name">프리텐다드</div>
+            <div class="font-card-maker">길형진</div>
+            <span class="font-card-tag tag-gothic">유사도 92%</span>
+          </div>
+        </div>
+        <div class="font-card">
+          <img src="img/고딕_산스체.png" alt="G마켓 산스">
+          <div class="font-card-info">
+            <div class="font-card-name">G마켓 산스</div>
+            <div class="font-card-maker">G마켓</div>
+            <span class="font-card-tag tag-gothic">유사도 85%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand-name">
+          <img src="img/noonnu_logo.webp" alt="눈누">눈누
+        </div>
+        <p>무료 한글 폰트 1,800여 종을 한곳에서.<br>상업적 이용 가능한 폰트를 쉽게 찾고<br>다운로드하세요.</p>
+        <div class="footer-social">
+          <a href="#" class="social-btn">f</a>
+          <a href="#" class="social-btn">t</a>
+          <a href="#" class="social-btn">in</a>
+          <a href="#" class="social-btn">yt</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>서비스</h4>
+        <ul>
+          <li><a href="#" onclick="showPage('free'); return false;">무료 폰트</a></li>
+          <li><a href="#" onclick="showPage('finder'); return false;">폰트 찾기</a></li>
+          <li><a href="#" onclick="showPage('ranking'); return false;">폰트 랭킹</a></li>
+          <li><a href="#" onclick="showPage('market'); return false;">눈누마켓</a></li>
+          <li><a href="#" onclick="showPage(\'subscription\'); return false;">이용권 구독</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>폰트 등록</h4>
+        <ul>
+          <li><a href="#">폰트 등록 신청</a></li>
+          <li><a href="#">등록 가이드</a></li>
+          <li><a href="#">라이선스 안내</a></li>
+          <li><a href="#">제작사 페이지</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>회사</h4>
+        <ul>
+          <li><a href="#">눈누 소개</a></li>
+          <li><a href="#">이용약관</a></li>
+          <li><a href="#">개인정보처리방침</a></li>
+          <li><a href="#">문의하기</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-divider"></div>
+    <div class="footer-bottom">
+      <p>© 2026 눈누. All rights reserved. 눈누에 등록된 폰트의 저작권은 각 제작사에 있습니다.</p>
+      <div class="footer-links">
+        <a href="#">이용약관</a>
+        <a href="#">개인정보처리방침</a>
+        <a href="#">폰트 등록 신청</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== 커서 =====
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+});
+(function animRing() {
+  rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+const hoverEls = 'a, button, input, textarea, .font-card, .ranking-item, .market-card, .filter-tab, .finder-tab';
+document.querySelectorAll(hoverEls).forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(2.2)';
+    dot.style.background = '#ff6b35';
+    ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+    ring.style.borderColor = '#ff6b35';
+    ring.style.background = 'rgba(255,107,53,0.07)';
+  });
+  el.addEventListener('mouseleave', () => {
+    dot.style.transform = 'translate(-50%,-50%) scale(1)';
+    dot.style.background = '#f5c800';
+    ring.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.borderColor = '#f5c800';
+    ring.style.background = 'rgba(245,200,0,0.05)';
+  });
+});
+
+// ===== 스크롤 진행 바 =====
+window.addEventListener('scroll', () => {
+  const s = window.scrollY;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  document.getElementById('scroll-progress').style.width = (h > 0 ? (s/h)*100 : 0) + '%';
+});
+
+// ===== 페이지 전환 =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.main-nav a').forEach(a => a.classList.remove('active'));
+  const m = {home:'nav-home', free:'nav-free', finder:'nav-finder', ranking:'nav-ranking', market:'nav-market', subscription:'nav-subscription', 'font-pyeongchang':'nav-free', recommend:'nav-recommend'};.replace('}', \", 'font-pyeongchang':'nav-free', recommend:'nav-recommend'}\")
+  if (m[name]) document.getElementById(m[name]).classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  if (name === 'home') startCountUp();
+}
+
+// ===== 폰트 찾기 탭 =====
+function setFinderTab(tab) {
+  document.querySelectorAll('.finder-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.finder-content').forEach(c => c.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  document.getElementById('content-' + tab).classList.add('active');
+}
+
+// ===== 필터 탭 =====
+function filterFonts(btn, cat) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#page-free .font-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+  });
+}
+
+// ===== 카운트업 =====
+function startCountUp() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    let cur = 0;
+    const step = Math.ceil(target / 55);
+    const t = setInterval(() => {
+      cur = Math.min(cur + step, target);
+      el.textContent = cur.toLocaleString();
+      if (cur >= target) clearInterval(t);
+    }, 18);
+  });
+}
+
+// ===== 드롭존 =====
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('dragover');
+  const f = e.dataTransfer.files[0];
+  if (f && f.type.startsWith('image/')) alert('이미지 "' + f.name + '"를 분석 중입니다...');
+}
+function handleFileSelect(e) {
+  const f = e.target.files[0];
+  if (f) alert('이미지 "' + f.name + '"를 분석 중입니다...');
+}
+
+// ===== 초기 실행 =====
+window.addEventListener('load', startCountUp);
+function togglePricing() {
+  const isChecked = document.getElementById('pricing-switch').checked;
+  const recurring = document.getElementById('content-recurring');
+  const onetime = document.getElementById('content-onetime');
+  const labelRecurring = document.getElementById('label-recurring');
+  const labelOnetime = document.getElementById('label-onetime');
+
+  if (isChecked) {
+    recurring.classList.remove('active');
+    onetime.classList.add('active');
+    labelRecurring.classList.remove('active');
+    labelOnetime.classList.add('active');
+  } else {
+    recurring.classList.add('active');
+    onetime.classList.remove('active');
+    labelRecurring.classList.add('active');
+    labelOnetime.classList.remove('active');
+  }
+}
+function processRecommendation(input) {
+  if (input.files && input.files[0]) {
+    alert('이미지를 분석 중입니다... 잠시만 기다려주세요.');
+    setTimeout(() => {
+      document.getElementById('recommend-results').classList.add('active');
+      window.scrollTo({
+        top: document.getElementById('recommend-results').offsetTop - 100,
+        behavior: 'smooth'
+      });
+    }, 1500);
+  }
+}
+</script>
+</body>
+</html>
